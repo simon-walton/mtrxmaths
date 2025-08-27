@@ -1,0 +1,13 @@
+CMakeCache.txt
+CMakeFiles/
+CMakeScripts/
+cmake_install.cmake
+/CMakeLists.txt.user
+*[oa]
+*~
+*.so
+*.dll
+*.lib
+/.vs
+vcpkg/
+build/
