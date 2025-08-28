@@ -4,6 +4,7 @@
 #include <fstream>
 #include <sstream>
 #include <iostream>
+#include <cstring>
 
 using std::vector;
 using Eigen::MatrixXd;
@@ -17,7 +18,7 @@ bool MtrxMaths::ReadMatrix(const std::string& filename, MatrixXd& outMatrix)
     std::ifstream file(filename, std::ios_base::in);
     if (!file.is_open())
     {
-        cerr << filename << ": can't open file\n";
+        cerr << filename << ": couldn't open file: " << std::strerror(errno) << "\n";
         return false;
     }
 
@@ -48,7 +49,7 @@ bool MtrxMaths::ReadMatrix(const std::string& filename, MatrixXd& outMatrix)
 
         if (row.size() != cols)
         {
-            std::cerr << "Rows must have the same number of elements\n";
+            std::cerr << "All rows must have the same number of elements\n";
             return false;
         }
 

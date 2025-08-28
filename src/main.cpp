@@ -5,6 +5,7 @@
 #include <cstring>
 #include <iostream>
 #include <iomanip>
+#include <locale>
 
 using std::cerr;
 using std::cout;
@@ -20,7 +21,7 @@ int main(int argc, char* argv[])
     using Eigen::MatrixXd;
     MatrixXd m1, m2;
 
-    static struct
+    static const struct
     {
         const char * flag;
         MtrxMaths::Op op;
@@ -67,6 +68,15 @@ int main(int argc, char* argv[])
         goto usage;
     }
 
+    // Allow user's preferred locale for numbers.
+    try
+    {
+        std::locale::global(std::locale(""));
+        cout.imbue(std::locale());
+    } catch (...)
+    {
+    }
+
     if (nParams >= 1)
     {
         if (!MtrxMaths::ReadMatrix(argv[2], m1))
@@ -93,7 +103,7 @@ int main(int argc, char* argv[])
     {
         if (m1.rows() != m2.rows() || m1.cols() != m2.cols())
         {
-            cerr << "Matrices must be same size\n";
+            cerr << "Matrices must be same dimensions\n";
             return 1;
         }
 
@@ -109,7 +119,7 @@ int main(int argc, char* argv[])
     {
         if (m1.cols() != m2.rows())
         {
-            cerr << "Matrices have incompatible sizes\n";
+            cerr << "Matrices have incompatible dimensions\n";
             return 1;
         }
 
@@ -157,7 +167,7 @@ int main(int argc, char* argv[])
         if (isDivide && m1.cols() != m2.rows()
             || !isDivide && m2.cols() != m2.rows())
         {
-            cerr << "Matrices have incompatible sizes\n";
+            cerr << "Matrices have incompatible dimensions\n";
             return 1;
         }
         if (!MtrxMaths::InvertMatrix(m2, m2))
