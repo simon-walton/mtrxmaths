@@ -39,7 +39,7 @@ bool MtrxMaths::ReadMatrix(const std::string& filename, MatrixXd& outMatrix)
             {
                 return false;
             }
-            cols = row.size();
+            cols = int(row.size());
         }
 
         if (row.size() == 0)
