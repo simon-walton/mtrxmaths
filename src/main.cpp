@@ -72,6 +72,7 @@ int main(int argc, char* argv[])
     try
     {
         std::locale::global(std::locale(""));
+	std::cin.imbue(std::locale());
         cout.imbue(std::locale());
     } catch (...)
     {
@@ -86,11 +87,17 @@ int main(int argc, char* argv[])
         }
         if (nParams >= 2)
         {
+            if (std::strcmp(argv[2], "-") == 0
+                && std::strcmp(argv[3], "-") == 0)
+            {
+	            cerr << "Cannot use stdin for both matrices\n";
+                return 1;
+            }
             if (!MtrxMaths::ReadMatrix(argv[3], m2))
             {
                 cerr << argv[3] << ": couldn't parse file\n";
                 return 1;
-            }
+        }
         }
     }
 

@@ -18,13 +18,20 @@ const Eigen::IOFormat MtrxMaths::baseFormat(17, Eigen::DontAlignCols);
 
 bool MtrxMaths::ReadMatrix(const std::string& filename, MatrixXd& outMatrix)
 {
-    std::ifstream file(filename, std::ios_base::in);
-    if (!file.is_open())
+    std::ifstream file;
+
+    const bool bUseStdin = (filename == "-");
+    if (!bUseStdin)
     {
-        cerr << filename << ": couldn't open file: " << std::strerror(errno) << "\n";
-        return false;
+            file.open(filename, std::ios_base::in);
+            if (!file.is_open())
+            {
+                    cerr << filename << ": couldn't open file: " << std::strerror(errno) << "\n";
+                    return false;
+            }
     }
 
+    std::istream& mtxSrc = bUseStdin ? std::cin : file;
     int rows = 0;
     int cols = 0;
 
@@ -32,7 +39,7 @@ bool MtrxMaths::ReadMatrix(const std::string& filename, MatrixXd& outMatrix)
     while (true)
     {
         vector<double> row;
-        if (!ReadRow(file, row))
+        if (!ReadRow(mtxSrc, row))
         {
             return false;
         }
