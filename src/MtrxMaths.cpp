@@ -8,10 +8,13 @@
 
 using std::vector;
 using Eigen::MatrixXd;
+using std::cerr;
 
 const Eigen::IOFormat MtrxMaths::baseFormat(17, Eigen::DontAlignCols);
 
-using std::cerr;
+#ifdef _WIN32
+#pragma warning(disable: 4996)  // 'strerror': This function or variable may be unsafe.
+#endif
 
 bool MtrxMaths::ReadMatrix(const std::string& filename, MatrixXd& outMatrix)
 {
@@ -129,7 +132,7 @@ bool MtrxMaths::InvertMatrix(const MatrixXd& inMatrix, MatrixXd& outMatrix)
     Eigen::PartialPivLU<MatrixXd> LU(inMatrix);
     if (LU.determinant() == 0)
     {
-        cerr << "Matrix is singular";
+        cerr << "Matrix is singular\n";
         return false;
     }
     const MatrixXd x1(LU.inverse());
@@ -137,7 +140,7 @@ bool MtrxMaths::InvertMatrix(const MatrixXd& inMatrix, MatrixXd& outMatrix)
     // Perform one level of iterative refinement on the solution.
     // Note this calculates the right (numeric) inverse;
     // probably should have an option for the left inverse.
-    const MatrixXd x2((2.0 * Eigen::MatrixXd::Identity(n, n) - x1 * inMatrix) * x1) ;
+    MatrixXd x2((2.0 * Eigen::MatrixXd::Identity(n, n) - x1 * inMatrix) * x1) ;
 
     outMatrix = std::move(x2);
     return true;
