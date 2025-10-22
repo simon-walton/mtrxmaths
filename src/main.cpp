@@ -44,6 +44,7 @@ int main(int argc, char* argv[])
             {"--reverseDivide", MtrxMaths::Op::reverseDivide, 2},
             {"-t", MtrxMaths::Op::transpose, 1},
             {"--transpose", MtrxMaths::Op::transpose, 1},
+            {"--qr", MtrxMaths::Op::qr, 1},
             {"-q", MtrxMaths::Op::info, 1},
             {"--query", MtrxMaths::Op::info, 1},
         };
@@ -72,7 +73,7 @@ int main(int argc, char* argv[])
     try
     {
         std::locale::global(std::locale(""));
-	std::cin.imbue(std::locale());
+        std::cin.imbue(std::locale());
         cout.imbue(std::locale());
     } catch (...)
     {
@@ -199,6 +200,16 @@ int main(int argc, char* argv[])
     }
     //____________________________________________________________________
 
+    // QR factorize
+    case MtrxMaths::Op::qr:
+    {
+        MatrixXd q; MatrixXd r;
+        MtrxMaths::QR(m1, q, r);
+        cout << "# Q:\n" << q.format(MtrxMaths::baseFormat) << std::endl << "# R:\n" <<
+            r.format(MtrxMaths::baseFormat) << std::endl;
+        break;
+    }
+    //____________________________________________________________________
 
     // Info
     case MtrxMaths::Op::info:
@@ -224,7 +235,9 @@ int main(int argc, char* argv[])
     -r/--reverseDivide  Reverse division
     -i/--invert         Inversion
     -t/--transpose      Transpose
+    --qr                QR factorize
     -q/--query          Info
 )";
+
     return 1;
 }

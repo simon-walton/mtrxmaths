@@ -147,13 +147,13 @@ bool MtrxMaths::InvertMatrix(const MatrixXd& inMatrix, MatrixXd& outMatrix)
     // Perform one level of iterative refinement on the solution.
     // Note this calculates the right (numeric) inverse;
     // probably should have an option for the left inverse.
-    MatrixXd x2((2.0 * Eigen::MatrixXd::Identity(n, n) - x1 * inMatrix) * x1) ;
+    MatrixXd x2((2.0 * MatrixXd::Identity(n, n) - x1 * inMatrix) * x1) ;
 
     outMatrix = std::move(x2);
     return true;
 }
 
-bool MtrxMaths::Determinant(const Eigen::MatrixXd& matrix, double& det)
+bool MtrxMaths::Determinant(const MatrixXd& matrix, double& det)
 {
     if (matrix.rows() != matrix.cols())
     {
@@ -166,3 +166,22 @@ bool MtrxMaths::Determinant(const Eigen::MatrixXd& matrix, double& det)
 
     return true;
 }
+
+bool MtrxMaths::QR(const MatrixXd& matrix, Eigen::MatrixXd& q, Eigen::MatrixXd& r)
+{
+    Eigen::HouseholderQR<MatrixXd> qrAlgo(matrix);
+    q = qrAlgo.householderQ();
+    // Eigen returns full QR factorization (Q is rows x rows);
+    // for reduced QR factorization (when rows > columns) you can
+    // slice Q to input matrix size (eg. with topLeftCorner()).
+    r = q.transpose() * matrix;
+
+    // Force upper triangular:
+    for (int row = 1; row < r.rows(); ++row)
+        for (int col = 0; col < row; ++col)
+        {
+            r(row, col) = 0.0;
+        }
+    return true;
+}
+
