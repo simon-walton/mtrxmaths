@@ -6,8 +6,7 @@
 #include <string>
 #include <iosfwd>
 
-#include "Eigen/Dense"
-#include "Eigen/src/Core/IO.h"
+#include "Eigen/Core"
 
 class MtrxMaths
 {

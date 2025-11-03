@@ -1,10 +1,13 @@
 // MtrxMaths.cpp
 
 #include "MtrxMaths.h"
+
 #include <fstream>
 #include <sstream>
 #include <iostream>
 #include <cstring>
+
+#include "Eigen/Dense"
 
 using std::vector;
 using Eigen::MatrixXd;
@@ -12,7 +15,7 @@ using std::cerr;
 
 const Eigen::IOFormat MtrxMaths::baseFormat(17, Eigen::DontAlignCols);
 
-#ifdef _WIN32
+#ifdef _MSC_VER
 #pragma warning(disable: 4996)  // 'strerror': This function or variable may be unsafe.
 #endif
 
@@ -34,8 +37,8 @@ bool MtrxMaths::ReadMatrix(const std::string& filename, MatrixXd& outMatrix)
     std::istream& mtxSrc = bUseStdin ? std::cin : file;
     int rows = 0;
     int cols = 0;
-
     vector<vector<double> > mx;
+
     while (true)
     {
         vector<double> row;
@@ -82,12 +85,14 @@ bool MtrxMaths::ReadMatrix(const std::string& filename, MatrixXd& outMatrix)
 bool MtrxMaths::ReadRow(std::istream& file, vector<double>& row)
 {
     std::string str;
-    while(true)
+
+    while (true)
     {
         std::getline(file, str);
 
         std::istringstream l(str);
         std::ws(l);
+
         if (l.eof())
         {
             if (file.eof())
@@ -124,6 +129,7 @@ bool MtrxMaths::ReadRow(std::istream& file, vector<double>& row)
             }
         }
     }
+
     return true;
 }
 
@@ -142,6 +148,7 @@ bool MtrxMaths::InvertMatrix(const MatrixXd& inMatrix, MatrixXd& outMatrix)
         cerr << "Matrix is singular\n";
         return false;
     }
+
     const MatrixXd x1(LU.inverse());
 
     // Perform one level of iterative refinement on the solution.
@@ -178,10 +185,10 @@ bool MtrxMaths::QR(const MatrixXd& matrix, Eigen::MatrixXd& q, Eigen::MatrixXd& 
 
     // Force upper triangular:
     for (int row = 1; row < r.rows(); ++row)
-        for (int col = 0; col < row; ++col)
+        for (int col = 0; col < row && col < r.cols(); ++col)
         {
             r(row, col) = 0.0;
         }
+
     return true;
 }
-

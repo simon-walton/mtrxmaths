@@ -1,4 +1,6 @@
 // main.cpp
+//
+// Copyright (c) 2025 S.M. Walton
 
 #include "MtrxMaths.h"
 #include <string>
@@ -13,8 +15,6 @@ using std::endl;
 
 int main(int argc, char* argv[])
 {
-    std::string file1;
-    std::string file2;
     auto op = MtrxMaths::Op::none;
     int nParams = 0;
 
@@ -94,6 +94,7 @@ int main(int argc, char* argv[])
 	            cerr << "Cannot use stdin for both matrices\n";
                 return 1;
             }
+
             if (!MtrxMaths::ReadMatrix(argv[3], m2))
             {
                 cerr << argv[3] << ": couldn't parse file\n";
@@ -226,13 +227,13 @@ int main(int argc, char* argv[])
     return 0;
 
     usage:
-    cerr << R"(Usage: mtrxmaths OPT FILE1 [FILE2]
+    cerr << R"(Usage: mtrxmaths OP FILE1 [FILE2]
     -a/--add            Addition
     -s/--subtract       Subtraction
     -m/--multiply       Multiplication
-    -D/--determinant    Determinant
     -d/--divide         Division
     -r/--reverseDivide  Reverse division
+    -D/--determinant    Determinant
     -i/--invert         Inversion
     -t/--transpose      Transpose
     --qr                QR factorize
