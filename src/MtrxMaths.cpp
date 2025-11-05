@@ -174,7 +174,7 @@ bool MtrxMaths::Determinant(const MatrixXd& matrix, double& det)
     return true;
 }
 
-bool MtrxMaths::QR(const MatrixXd& matrix, Eigen::MatrixXd& q, Eigen::MatrixXd& r)
+bool MtrxMaths::QR(const MatrixXd& matrix, MatrixXd& q, MatrixXd& r)
 {
     Eigen::HouseholderQR<MatrixXd> qrAlgo(matrix);
     q = qrAlgo.householderQ();
